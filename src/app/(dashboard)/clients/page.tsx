@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Plus, Search, Trash2, Users } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 interface Client {
@@ -12,7 +13,6 @@ interface Client {
   phone: string | null;
   company: string | null;
   createdAt: string;
-  _count?: { tickets: number };
 }
 
 export default function ClientsPage() {
@@ -41,62 +41,67 @@ export default function ClientsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Clientes</h1>
-        <Link
-          href="/clients/new"
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-        >
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Clientes</h1>
+          <p className="text-sm text-slate-500 mt-1">{filtered.length} cliente(s)</p>
+        </div>
+        <Link href="/clients/new" className="btn-primary">
+          <Plus className="w-4 h-4" />
           Novo Cliente
         </Link>
       </div>
 
-      <input
-        type="text"
-        placeholder="Buscar..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full border rounded-lg px-3 py-2 mb-4"
-      />
+      <div className="relative mb-4">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        <input
+          type="text"
+          placeholder="Buscar por nome ou email..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="input pl-9"
+        />
+      </div>
 
-      <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+      <div className="card overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-50 text-left">
-            <tr>
-              <th className="px-4 py-3 font-medium text-sm">Nome</th>
-              <th className="px-4 py-3 font-medium text-sm">Email</th>
-              <th className="px-4 py-3 font-medium text-sm">Empresa</th>
-              <th className="px-4 py-3 font-medium text-sm">Data</th>
-              <th className="px-4 py-3 font-medium text-sm"></th>
+          <thead>
+            <tr className="border-b border-slate-100">
+              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Nome</th>
+              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Email</th>
+              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Empresa</th>
+              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Data</th>
+              <th className="px-4 py-3"></th>
             </tr>
           </thead>
-          <tbody className="divide-y">
+          <tbody className="divide-y divide-slate-100">
             {filtered.map((client) => (
               <tr
                 key={client.id}
-                className="hover:bg-gray-50 cursor-pointer"
+                className="hover:bg-slate-50 cursor-pointer transition-colors"
                 onClick={() => router.push(`/clients/${client.id}`)}
               >
-                <td className="px-4 py-3">{client.name}</td>
-                <td className="px-4 py-3 text-gray-500">{client.email}</td>
-                <td className="px-4 py-3 text-gray-500">{client.company ?? "-"}</td>
-                <td className="px-4 py-3 text-gray-500">{formatDate(client.createdAt)}</td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3.5 text-sm font-medium text-slate-900">{client.name}</td>
+                <td className="px-4 py-3.5 text-sm text-slate-500">{client.email}</td>
+                <td className="px-4 py-3.5 text-sm text-slate-500">{client.company ?? "—"}</td>
+                <td className="px-4 py-3.5 text-sm text-slate-400">{formatDate(client.createdAt)}</td>
+                <td className="px-4 py-3.5">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       deleteClient(client.id);
                     }}
-                    className="text-red-500 text-sm hover:underline"
+                    className="btn-danger text-xs py-1.5 px-2"
                   >
-                    Excluir
+                    <Trash2 className="w-3 h-3" />
                   </button>
                 </td>
               </tr>
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-gray-400">
-                  Nenhum cliente encontrado
+                <td colSpan={5} className="px-4 py-12 text-center">
+                  <Users className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                  <p className="text-sm text-slate-400">Nenhum cliente encontrado</p>
                 </td>
               </tr>
             )}

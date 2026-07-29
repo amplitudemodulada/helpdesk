@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Plus, Wrench } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 interface WorkRecord {
@@ -28,44 +29,46 @@ export default function WorkRecordsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Trabalhos Realizados</h1>
-        <Link
-          href="/work-records/new"
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-        >
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Trabalhos Realizados</h1>
+          <p className="text-sm text-slate-500 mt-1">{records.length} registro(s)</p>
+        </div>
+        <Link href="/work-records/new" className="btn-primary">
+          <Plus className="w-4 h-4" />
           Novo Trabalho
         </Link>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+      <div className="card overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-50 text-left">
-            <tr>
-              <th className="px-4 py-3 font-medium text-sm">Descrição</th>
-              <th className="px-4 py-3 font-medium text-sm">Ticket</th>
-              <th className="px-4 py-3 font-medium text-sm">Cliente</th>
-              <th className="px-4 py-3 font-medium text-sm">Horas</th>
-              <th className="px-4 py-3 font-medium text-sm">Data</th>
+          <thead>
+            <tr className="border-b border-slate-100">
+              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Descrição</th>
+              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Ticket</th>
+              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Cliente</th>
+              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Horas</th>
+              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Data</th>
             </tr>
           </thead>
-          <tbody className="divide-y">
+          <tbody className="divide-y divide-slate-100">
             {records.map((record) => (
               <tr
                 key={record.id}
-                className="hover:bg-gray-50 cursor-pointer"
+                className="hover:bg-slate-50 cursor-pointer transition-colors"
                 onClick={() => router.push(`/work-records/${record.id}`)}
               >
-                <td className="px-4 py-3 font-medium">{record.description}</td>
-                <td className="px-4 py-3 text-gray-500">{record.ticket.title}</td>
-                <td className="px-4 py-3 text-gray-500">{record.ticket.client.name}</td>
-                <td className="px-4 py-3">{record.hoursSpent ? `${record.hoursSpent}h` : "-"}</td>
-                <td className="px-4 py-3 text-gray-500">{formatDate(record.startDate)}</td>
+                <td className="px-4 py-3.5 text-sm font-medium text-slate-900">{record.description}</td>
+                <td className="px-4 py-3.5 text-sm text-slate-500">{record.ticket.title}</td>
+                <td className="px-4 py-3.5 text-sm text-slate-500">{record.ticket.client.name}</td>
+                <td className="px-4 py-3.5 text-sm text-slate-600">{record.hoursSpent ? `${record.hoursSpent}h` : "—"}</td>
+                <td className="px-4 py-3.5 text-sm text-slate-400">{formatDate(record.startDate)}</td>
               </tr>
             ))}
             {records.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-gray-400">
-                  Nenhum trabalho registrado
+                <td colSpan={5} className="px-4 py-12 text-center">
+                  <Wrench className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                  <p className="text-sm text-slate-400">Nenhum trabalho registrado</p>
                 </td>
               </tr>
             )}

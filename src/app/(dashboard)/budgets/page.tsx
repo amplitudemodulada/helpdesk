@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Plus, Receipt } from "lucide-react";
 import { formatDate, formatCurrency, statusColor, statusLabel } from "@/lib/utils";
 
 interface Budget {
@@ -12,6 +13,8 @@ interface Budget {
   createdAt: string;
   ticket: { id: string; title: string; client: { name: string } };
 }
+
+const filters = ["", "pending", "sent", "approved", "rejected"];
 
 export default function BudgetsPage() {
   const router = useRouter();
@@ -24,29 +27,30 @@ export default function BudgetsPage() {
       .then(setBudgets);
   }, []);
 
-  const filtered = filter
-    ? budgets.filter((b) => b.status === filter)
-    : budgets;
+  const filtered = filter ? budgets.filter((b) => b.status === filter) : budgets;
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Orçamentos</h1>
-        <Link
-          href="/budgets/new"
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-        >
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Orçamentos</h1>
+          <p className="text-sm text-slate-500 mt-1">{filtered.length} registro(s)</p>
+        </div>
+        <Link href="/budgets/new" className="btn-primary">
+          <Plus className="w-4 h-4" />
           Novo Orçamento
         </Link>
       </div>
 
-      <div className="flex gap-2 mb-4">
-        {["", "pending", "sent", "approved", "rejected"].map((s) => (
+      <div className="flex gap-2 mb-4 flex-wrap">
+        {filters.map((s) => (
           <button
             key={s}
             onClick={() => setFilter(s)}
-            className={`px-3 py-1 rounded-full text-sm border ${
-              filter === s ? "bg-blue-600 text-white" : "hover:bg-gray-50"
+            className={`badge border cursor-pointer transition-colors ${
+              filter === s
+                ? "bg-blue-600 text-white border-blue-600"
+                : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
             }`}
           >
             {s ? statusLabel(s) : "Todos"}
@@ -54,41 +58,38 @@ export default function BudgetsPage() {
         ))}
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+      <div className="card overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-50 text-left">
-            <tr>
-              <th className="px-4 py-3 font-medium text-sm">Ticket</th>
-              <th className="px-4 py-3 font-medium text-sm">Cliente</th>
-              <th className="px-4 py-3 font-medium text-sm">Valor</th>
-              <th className="px-4 py-3 font-medium text-sm">Status</th>
-              <th className="px-4 py-3 font-medium text-sm">Data</th>
+          <thead>
+            <tr className="border-b border-slate-100">
+              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Ticket</th>
+              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Cliente</th>
+              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Valor</th>
+              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
+              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Data</th>
             </tr>
           </thead>
-          <tbody className="divide-y">
+          <tbody className="divide-y divide-slate-100">
             {filtered.map((budget) => (
               <tr
                 key={budget.id}
-                className="hover:bg-gray-50 cursor-pointer"
+                className="hover:bg-slate-50 cursor-pointer transition-colors"
                 onClick={() => router.push(`/budgets/${budget.id}`)}
               >
-                <td className="px-4 py-3">{budget.ticket.title}</td>
-                <td className="px-4 py-3 text-gray-500">{budget.ticket.client.name}</td>
-                <td className="px-4 py-3 font-medium">{formatCurrency(budget.total)}</td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${statusColor(budget.status)}`}
-                  >
-                    {statusLabel(budget.status)}
-                  </span>
+                <td className="px-4 py-3.5 text-sm text-slate-900">{budget.ticket.title}</td>
+                <td className="px-4 py-3.5 text-sm text-slate-500">{budget.ticket.client.name}</td>
+                <td className="px-4 py-3.5 text-sm font-semibold text-slate-900">{formatCurrency(budget.total)}</td>
+                <td className="px-4 py-3.5">
+                  <span className={`badge ${statusColor(budget.status)}`}>{statusLabel(budget.status)}</span>
                 </td>
-                <td className="px-4 py-3 text-gray-500">{formatDate(budget.createdAt)}</td>
+                <td className="px-4 py-3.5 text-sm text-slate-400">{formatDate(budget.createdAt)}</td>
               </tr>
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-gray-400">
-                  Nenhum orçamento encontrado
+                <td colSpan={5} className="px-4 py-12 text-center">
+                  <Receipt className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                  <p className="text-sm text-slate-400">Nenhum orçamento encontrado</p>
                 </td>
               </tr>
             )}
