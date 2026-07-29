@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
+const TEAM_SCOPE = "amplitudemoduladas-projects";
+
 export function middleware(req: NextRequest) {
-  const allowed = process.env.APP_DOMAIN;
-  if (allowed && req.nextUrl.pathname.startsWith("/api/")) {
-    const host = req.headers.get("host") ?? "";
-    const isVercel = host.endsWith(".vercel.app");
-    const isAllowed = host === allowed || isVercel;
+  const allowedDomain = process.env.APP_DOMAIN;
+  const host = req.headers.get("host") ?? "";
+
+  if (allowedDomain && req.nextUrl.pathname.startsWith("/api/")) {
+    const isProduction = host === allowedDomain;
+    const isOurPreview = host.endsWith(`-${TEAM_SCOPE}.vercel.app`);
+    const isAllowed = isProduction || isOurPreview;
 
     if (!isAllowed) {
       return NextResponse.json(
