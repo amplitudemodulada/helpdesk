@@ -45,6 +45,7 @@ export default function TicketDetailPage() {
   if (!ticket) return <p>Carregando...</p>;
 
   async function updateStatus(status: string) {
+    if (!ticket) return;
     await fetch(`/api/tickets/${ticket.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -54,7 +55,7 @@ export default function TicketDetailPage() {
   }
 
   async function deleteTicket() {
-    if (!confirm("Excluir atendimento?")) return;
+    if (!ticket || !confirm("Excluir atendimento?")) return;
     await fetch(`/api/tickets/${ticket.id}`, { method: "DELETE" });
     router.push("/tickets");
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface Ticket {
@@ -10,6 +10,14 @@ interface Ticket {
 }
 
 export default function NewWorkRecordPage() {
+  return (
+    <Suspense>
+      <NewWorkRecordForm />
+    </Suspense>
+  );
+}
+
+function NewWorkRecordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const preselectedTicket = searchParams.get("ticketId") ?? "";

@@ -39,6 +39,7 @@ export default function BudgetDetailPage() {
   }[];
 
   async function updateStatus(status: string) {
+    if (!budget) return;
     await fetch(`/api/budgets/${budget.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },

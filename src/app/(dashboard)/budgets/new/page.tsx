@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface Ticket {
@@ -16,6 +16,14 @@ interface Item {
 }
 
 export default function NewBudgetPage() {
+  return (
+    <Suspense>
+      <NewBudgetForm />
+    </Suspense>
+  );
+}
+
+function NewBudgetForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const preselectedTicket = searchParams.get("ticketId") ?? "";
@@ -38,7 +46,7 @@ export default function NewBudgetPage() {
 
   function updateItem(i: number, field: keyof Item, value: string | number) {
     const newItems = [...items];
-    (newItems[i] as Record<string, unknown>)[field] = value;
+    (newItems[i] as unknown as Record<string, string | number>)[field] = value;
     setItems(newItems);
   }
 
