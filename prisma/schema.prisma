@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  tickets   Ticket[]
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  notes     String?
+  createdAt DateTime @default(now())
+  tickets   Ticket[]
+}
+
+model Ticket {
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  status      String       @default("open")
+  priority    String       @default("medium")
+  clientId    String
+  client      Client       @relation(fields: [clientId], references: [id])
+  userId      String?
+  user        User?        @relation(fields: [userId], references: [id])
+  budget      Budget?
+  workRecords WorkRecord[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Budget {
+  id         String    @id @default(cuid())
+  ticketId   String    @unique
+  ticket     Ticket    @relation(fields: [ticketId], references: [id])
+  items      String
+  total      Float
+  status     String    @default("pending")
+  sentAt     DateTime?
+  approvedAt DateTime?
+  createdAt  DateTime  @default(now())
+}
+
+model WorkRecord {
+  id          String   @id @default(cuid())
+  ticketId    String
+  ticket      Ticket   @relation(fields: [ticketId], references: [id])
+  description String
+  startDate   DateTime
+  endDate     DateTime?
+  hoursSpent  Float?
+  createdAt   DateTime @default(now())
+}
