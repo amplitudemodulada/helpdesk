@@ -10,6 +10,8 @@ const navItems = [
   { href: "/tickets", label: "Atendimentos", icon: "🎫" },
   { href: "/budgets", label: "Orçamentos", icon: "💰" },
   { href: "/work-records", label: "Trabalhos", icon: "🔧" },
+  { href: "/users", label: "Usuários", icon: "🔐" },
+  { href: "/settings", label: "Configurações", icon: "⚙️" },
 ];
 
 export function Sidebar() {

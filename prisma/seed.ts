@@ -14,6 +14,7 @@ async function main() {
       email: "admin@helpdesk.com",
       password,
       role: "admin",
+      active: true,
     },
   });
 
