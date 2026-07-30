@@ -10,6 +10,7 @@ import {
   Wrench,
   Shield,
   Settings,
+  BarChart3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +21,7 @@ const navItems = [
   { href: "/budgets", label: "Orçamentos", icon: Receipt },
   { href: "/work-records", label: "Trabalhos", icon: Wrench },
   { href: "/users", label: "Usuários", icon: Shield },
+  { href: "/reports", label: "Relatórios", icon: BarChart3 },
   { href: "/settings", label: "Configurações", icon: Settings },
 ];
 
