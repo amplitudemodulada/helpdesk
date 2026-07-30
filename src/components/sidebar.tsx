@@ -76,7 +76,7 @@ export function Sidebar({ mobileOpen, onClose }: { mobileOpen: boolean; onClose:
         <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={onClose} />
       )}
       {/* Mobile sidebar */}
-      <aside className={`fixed lg:sticky top-0 left-0 z-50 w-64 h-screen bg-slate-900 transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+      <aside className={`fixed top-0 left-0 z-50 w-64 h-screen bg-slate-900 transform transition-transform duration-200 ease-in-out lg:hidden ${
         mobileOpen ? "translate-x-0" : "-translate-x-full"
       }`}>
         {content}
